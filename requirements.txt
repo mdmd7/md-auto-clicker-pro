@@ -1,5 +1,0 @@
-customtkinter
-pyautogui
-pynput
-arabic-reshaper
-python-bidi
