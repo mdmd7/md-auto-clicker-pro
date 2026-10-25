@@ -1,0 +1,40 @@
+name: Build MD Auto Clicker Pro
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Get source code
+        uses: actions/checkout@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install customtkinter pyautogui pynput pyinstaller arabic-reshaper python-bidi
+
+      - name: Verify required modules
+        run: |
+          python -c "import arabic_reshaper, bidi; print('Arabic libraries OK')"
+
+      - name: Build EXE
+        run: |
+          pyinstaller --noconfirm --clean --windowed --onefile --name "MD Auto Clicker Pro" --collect-all arabic_reshaper --collect-all bidi MD_Auto_Clicker_Pro.py
+
+      - name: Upload EXE
+        uses: actions/upload-artifact@v5
+        with:
+          name: MD-Auto-Clicker-Pro
+          path: "dist/MD Auto Clicker Pro.exe"
+          if-no-files-found: error
